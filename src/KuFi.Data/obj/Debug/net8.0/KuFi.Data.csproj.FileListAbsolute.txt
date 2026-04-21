@@ -1,0 +1,12 @@
+D:\CODE\KuFi AnVirs\src\KuFi.Data\bin\Debug\net8.0\KuFi.Data.deps.json
+D:\CODE\KuFi AnVirs\src\KuFi.Data\bin\Debug\net8.0\KuFi.Data.dll
+D:\CODE\KuFi AnVirs\src\KuFi.Data\bin\Debug\net8.0\KuFi.Data.pdb
+D:\CODE\KuFi AnVirs\src\KuFi.Data\obj\Debug\net8.0\KuFi.Data.csproj.AssemblyReference.cache
+D:\CODE\KuFi AnVirs\src\KuFi.Data\obj\Debug\net8.0\KuFi.Data.GeneratedMSBuildEditorConfig.editorconfig
+D:\CODE\KuFi AnVirs\src\KuFi.Data\obj\Debug\net8.0\KuFi.Data.AssemblyInfoInputs.cache
+D:\CODE\KuFi AnVirs\src\KuFi.Data\obj\Debug\net8.0\KuFi.Data.AssemblyInfo.cs
+D:\CODE\KuFi AnVirs\src\KuFi.Data\obj\Debug\net8.0\KuFi.Data.csproj.CoreCompileInputs.cache
+D:\CODE\KuFi AnVirs\src\KuFi.Data\obj\Debug\net8.0\KuFi.Data.dll
+D:\CODE\KuFi AnVirs\src\KuFi.Data\obj\Debug\net8.0\refint\KuFi.Data.dll
+D:\CODE\KuFi AnVirs\src\KuFi.Data\obj\Debug\net8.0\KuFi.Data.pdb
+D:\CODE\KuFi AnVirs\src\KuFi.Data\obj\Debug\net8.0\ref\KuFi.Data.dll

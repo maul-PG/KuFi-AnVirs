@@ -1,0 +1,15 @@
+D:\CODE\KuFi AnVirs\src\KuFi.Engine\bin\Debug\net8.0\KuFi.Engine.deps.json
+D:\CODE\KuFi AnVirs\src\KuFi.Engine\bin\Debug\net8.0\KuFi.Engine.dll
+D:\CODE\KuFi AnVirs\src\KuFi.Engine\bin\Debug\net8.0\KuFi.Engine.pdb
+D:\CODE\KuFi AnVirs\src\KuFi.Engine\bin\Debug\net8.0\KuFi.Data.dll
+D:\CODE\KuFi AnVirs\src\KuFi.Engine\bin\Debug\net8.0\KuFi.Data.pdb
+D:\CODE\KuFi AnVirs\src\KuFi.Engine\obj\Debug\net8.0\KuFi.Engine.csproj.AssemblyReference.cache
+D:\CODE\KuFi AnVirs\src\KuFi.Engine\obj\Debug\net8.0\KuFi.Engine.GeneratedMSBuildEditorConfig.editorconfig
+D:\CODE\KuFi AnVirs\src\KuFi.Engine\obj\Debug\net8.0\KuFi.Engine.AssemblyInfoInputs.cache
+D:\CODE\KuFi AnVirs\src\KuFi.Engine\obj\Debug\net8.0\KuFi.Engine.AssemblyInfo.cs
+D:\CODE\KuFi AnVirs\src\KuFi.Engine\obj\Debug\net8.0\KuFi.Engine.csproj.CoreCompileInputs.cache
+D:\CODE\KuFi AnVirs\src\KuFi.Engine\obj\Debug\net8.0\KuFi.Eng.F25E9DE8.Up2Date
+D:\CODE\KuFi AnVirs\src\KuFi.Engine\obj\Debug\net8.0\KuFi.Engine.dll
+D:\CODE\KuFi AnVirs\src\KuFi.Engine\obj\Debug\net8.0\refint\KuFi.Engine.dll
+D:\CODE\KuFi AnVirs\src\KuFi.Engine\obj\Debug\net8.0\KuFi.Engine.pdb
+D:\CODE\KuFi AnVirs\src\KuFi.Engine\obj\Debug\net8.0\ref\KuFi.Engine.dll

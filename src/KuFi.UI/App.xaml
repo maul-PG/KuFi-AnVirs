@@ -1,0 +1,8 @@
+<Application x:Class="KuFi.UI.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             StartupUri="MainWindow.xaml">
+    <Application.Resources>
+         <!-- Anda bisa meletakkan resource global di sini di masa mendatang -->
+    </Application.Resources>
+</Application>
