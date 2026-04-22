@@ -7,7 +7,14 @@
     <UseWindowsForms>true</UseWindowsForms>
     <!-- Mendeklarasikan bahwa aplikasi butuh UAC elevation via app.manifest -->
     <ApplicationManifest>app.manifest</ApplicationManifest>
+    <ApplicationIcon>Assets\logo.ico</ApplicationIcon>
   </PropertyGroup>
+  
+  <ItemGroup>
+    <Resource Include="Assets\logo.ico" />
+    <Resource Include="Assets\logo.png" />
+  </ItemGroup>
+  
   <ItemGroup>
     <ProjectReference Include="..\KuFi.Engine\KuFi.Engine.csproj" />
     <ProjectReference Include="..\KuFi.Data\KuFi.Data.csproj" />

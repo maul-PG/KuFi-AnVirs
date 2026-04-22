@@ -6,6 +6,9 @@
         Background="{DynamicResource BgDeepDarkBlue}"
         WindowStartupLocation="CenterScreen">
         
+    <WindowChrome.WindowChrome>
+        <WindowChrome CaptionHeight="32" GlassFrameThickness="1" CornerRadius="0"/>
+    </WindowChrome.WindowChrome>
     <Window.DataContext>
         <vm:MainViewModel />
     </Window.DataContext>
@@ -15,6 +18,56 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="Styles/Colors.xaml"/>
             </ResourceDictionary.MergedDictionaries>
+
+            <!-- ContextMenu WPF untuk System Tray (Rounded & Minimalist) -->
+            <ContextMenu x:Key="TrayMenu" Background="#0F172A" Foreground="White" BorderThickness="0" HasDropShadow="True" Placement="MousePoint">
+                <ContextMenu.Resources>
+                    <Style TargetType="ContextMenu">
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="ContextMenu">
+                                    <Border Background="#0F172A" BorderBrush="#1E293B" BorderThickness="1" CornerRadius="8" Padding="5">
+                                        <Border.Effect>
+                                            <DropShadowEffect Color="Black" BlurRadius="15" Opacity="0.5" ShadowDepth="5"/>
+                                        </Border.Effect>
+                                        <ItemsPresenter/>
+                                    </Border>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                    <Style TargetType="MenuItem">
+                        <Setter Property="Background" Value="Transparent"/>
+                        <Setter Property="Foreground" Value="White"/>
+                        <Setter Property="Padding" Value="20,10"/>
+                        <Setter Property="Margin" Value="0,2"/>
+                        <Setter Property="FontSize" Value="13"/>
+                        <Setter Property="FontFamily" Value="Segoe UI"/>
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="MenuItem">
+                                    <Border x:Name="BgBorder" Background="{TemplateBinding Background}" CornerRadius="6">
+                                        <ContentPresenter ContentSource="Header" Margin="{TemplateBinding Padding}"/>
+                                    </Border>
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsHighlighted" Value="True">
+                                            <!-- Gelap dengan Opacity diturunkan -->
+                                            <Setter TargetName="BgBorder" Property="Background" Value="#1A99F6E4"/>
+                                            <Setter Property="Foreground" Value="{DynamicResource EthericMint}"/>
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </ContextMenu.Resources>
+                
+                <MenuItem Header="Scan Now" Click="TrayScan_Click"/>
+                <MenuItem Header="Settings" Click="TraySettings_Click"/>
+                <MenuItem Header="About" Click="TrayAbout_Click"/>
+                <Separator Background="#1E293B" Margin="5"/>
+                <MenuItem Header="Exit" Click="TrayExit_Click"/>
+            </ContextMenu>
             
             <!-- Style Minimalis untuk Tombol Navigasi Sidebar -->
             <Style x:Key="SidebarButtonStyle" TargetType="RadioButton">
@@ -61,12 +114,11 @@
         </Grid.ColumnDefinitions>
 
         <!-- Sidebar (Kiri) -->
-        <Border Grid.Column="0" Background="#0B1120" BorderBrush="#1E293B" BorderThickness="0,0,1,0">
+        <Border Grid.Column="0" Background="#0F172A" BorderBrush="#1E293B" BorderThickness="0,0,1,0">
             <Grid>
                 <StackPanel Margin="0,40,0,0" VerticalAlignment="Top">
-                    <!-- Logo KuFi (Vektor K Minimalis) -->
-                    <Path Data="M 0 0 L 4 0 L 4 10 L 12 0 L 17 0 L 7 12 L 17 24 L 12 24 L 4 14 L 4 24 L 0 24 Z" Fill="{DynamicResource EthericMint}" Stretch="Uniform" Width="26" Height="26" HorizontalAlignment="Center" Margin="0,0,0,50"/>
-                    
+                    <!-- Teks Logo KuFi -->
+                    <TextBlock Text="KuFi" Foreground="{DynamicResource EthericMint}" FontSize="20" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,0,0,50"/>
                     <!-- Tombol Dashboard -->
                     <RadioButton x:Name="NavDashboard" Style="{StaticResource SidebarButtonStyle}" IsChecked="True" Command="{Binding NavigateDashboardCommand}" GroupName="NavGroup">
                         <TextBlock Text="&#xE80A;" FontFamily="Segoe MDL2 Assets" FontSize="22"/>
@@ -99,7 +151,7 @@
 
         <!-- Area Konten Dinamis (Kanan) -->
         <!-- NavigationUIVisibility="Hidden" akan menyembunyikan panah 'Back/Forward' default milik Frame -->
-        <Frame Grid.Column="1" 
+        <Frame x:Name="MainFrame" Grid.Column="1" 
                Source="{Binding CurrentPage}" 
                NavigationUIVisibility="Hidden" 
                Background="Transparent"

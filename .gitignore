@@ -1,0 +1,9 @@
+# .gitignore sederhana buat KuFi
+bin/
+obj/
+.vs/
+*.user
+*.suo
+*.pdb
+*.dll
+*.exe

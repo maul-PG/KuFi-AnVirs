@@ -67,7 +67,7 @@
                     
                     <!-- Opsi 1: Run as Admin -->
                     <Border Background="{DynamicResource CardBackground}" CornerRadius="16" Padding="25" Margin="0,0,0,15">
-                        <CheckBox Style="{StaticResource ToggleSwitchStyle}" IsChecked="True">
+                        <CheckBox x:Name="chkRunAdmin" Style="{StaticResource ToggleSwitchStyle}" IsChecked="True">
                             <StackPanel>
                                 <StackPanel Orientation="Horizontal">
                                     <TextBlock Text="&#xEA18;" FontFamily="Segoe MDL2 Assets" Foreground="{DynamicResource EthericMint}" VerticalAlignment="Center" Margin="0,0,10,0" FontSize="18"/>
@@ -80,7 +80,7 @@
 
                     <!-- Opsi 2: Real-time System Monitor -->
                     <Border Background="{DynamicResource CardBackground}" CornerRadius="16" Padding="25" Margin="0,0,0,15">
-                        <CheckBox Style="{StaticResource ToggleSwitchStyle}" IsChecked="True">
+                        <CheckBox x:Name="chkRealTimeMonitor" Style="{StaticResource ToggleSwitchStyle}" IsChecked="True">
                             <StackPanel>
                                 <StackPanel Orientation="Horizontal">
                                     <TextBlock Text="&#xE9D9;" FontFamily="Segoe MDL2 Assets" Foreground="{DynamicResource EthericMint}" VerticalAlignment="Center" Margin="0,0,10,0" FontSize="18"/>
@@ -95,7 +95,7 @@
 
                     <!-- Opsi 3: System Tray -->
                     <Border Background="{DynamicResource CardBackground}" CornerRadius="16" Padding="25" Margin="0,0,0,15">
-                        <CheckBox Style="{StaticResource ToggleSwitchStyle}" IsChecked="True">
+                        <CheckBox x:Name="chkMinimizeToTray" Style="{StaticResource ToggleSwitchStyle}" IsChecked="True">
                             <StackPanel>
                                 <StackPanel Orientation="Horizontal">
                                     <TextBlock Text="&#xE8B9;" FontFamily="Segoe MDL2 Assets" Foreground="{DynamicResource EthericMint}" VerticalAlignment="Center" Margin="0,0,10,0" FontSize="18"/>
@@ -122,10 +122,19 @@
                 
                 <!-- Tombol Simpan ditaruh di luar StackPanel Left-Aligned agar bisa ke tengah layar -->
                 <StackPanel Margin="0,15,0,30">
-                    <Button Background="Transparent" BorderThickness="0" Cursor="Hand" HorizontalAlignment="Center">
-                        <Border Background="{DynamicResource EthericMint}" CornerRadius="8" Width="200" Height="45">
-                            <TextBlock Text="Save Changes" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" FontSize="14" Foreground="#0B1120"/>
-                        </Border>
+                    <Button Content="Save Changes" Click="SaveChanges_Click" Cursor="Hand" HorizontalAlignment="Center" Foreground="#0B1120" FontSize="14" FontWeight="Bold" Width="200" Height="45">
+                        <Button.Template>
+                            <ControlTemplate TargetType="Button">
+                                <Border x:Name="BgBorder" Background="{DynamicResource EthericMint}" CornerRadius="8">
+                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Border>
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter TargetName="BgBorder" Property="Background" Value="#73E2CD"/> <!-- Sedikit lebih gelap dari Mint -->
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Button.Template>
                     </Button>
                 </StackPanel>
             </StackPanel>

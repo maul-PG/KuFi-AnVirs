@@ -156,7 +156,12 @@ namespace KuFi.UI.Views
                                         
                                         // SMART DETECTION INTEGRATION
                                         var threat = await _scanner.CheckThreatAsync(file);
-                                        LogMessage($"Checking: {System.IO.Path.GetFileName(file)} -> Hash: {threat.fileHash}");
+                                        
+                                        // Diberikan sampling setiap 25 file agar UI terlihat hidup tanpa membuat thread lag
+                                        if (totalFiles % 25 == 0)
+                                        {
+                                            LogMessage($"Checking: {System.IO.Path.GetFileName(file)} -> Hash: {threat.fileHash}");
+                                        }
 
                                         if (threat.isInfected)
                                         {
@@ -242,20 +247,30 @@ namespace KuFi.UI.Views
                 }
 
                 // -- FASE 3: PENYELESAIAN UI --
+                bool wasAborted = !_isScanRunning;
+                
                 _elapsedTimer.Stop(); // Hentikan timer detik
                 _isScanRunning = false;
                 
                 var totalElapsed = DateTime.Now - _startTime;
-                TxtTime.Text = $"Time elapsed: {totalElapsed:hh\\:mm\\:ss} • Finished";
+                TxtTime.Text = $"Time elapsed: {totalElapsed:hh\\:mm\\:ss} • {(wasAborted ? "Aborted" : "Finished")}";
                 
-                TxtStatus.Text = "Rescue Completed";
-                TxtProcessing.Text = "DONE";
-                TxtProgressPercent.Text = "100%";
+                TxtStatus.Text = wasAborted ? "Scan Aborted" : "Rescue Completed";
+                TxtProcessing.Text = wasAborted ? "ABORTED" : "COMPLETED";
+                if (!wasAborted) TxtProgressPercent.Text = "100%";
                 
-                BtnRescue.IsEnabled = true; 
-                BtnRescue.Opacity = 1;
                 BtnStop.IsEnabled = false;
                 BtnStop.Opacity = 0.5;
+                BtnRescue.IsEnabled = true;
+                BtnRescue.Opacity = 1;
+                
+                // --- INTEGRASI MODAL BARU ---
+                var dialog = new KuFiDialog(
+                    wasAborted ? "Scan Aborted" : "KuFi Rescue Mission", 
+                    wasAborted ? $"Operasi dihentikan paksa.\nDrive: {selectedDrive.Letter} {selectedDrive.Name}\nTotal File Diproses: {TxtTotalFiles.Text}" : $"Penyelamatan Selesai!\nDrive: {selectedDrive.Letter} {selectedDrive.Name}\nTotal File: {TxtTotalFiles.Text}\nUkuran: {TxtRecoveredSize.Text}", 
+                    KuFiDialogButtons.Ok, 
+                    wasAborted ? KuFiDialogIcon.Warning : KuFiDialogIcon.Info);
+                dialog.ShowDialog();
             }
             else
             {

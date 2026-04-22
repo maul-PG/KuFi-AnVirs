@@ -1,6 +1,7 @@
 using System;
 using System.ComponentModel;
 using System.Windows.Input;
+using System.Collections.ObjectModel;
 
 namespace KuFi.UI.ViewModels
 {
@@ -10,6 +11,9 @@ namespace KuFi.UI.ViewModels
         
         // Global state untuk melacak apakah sistem sedang aman atau butuh tindakan (Action Required)
         public static bool IsSystemSecured { get; set; } = true;
+
+        // Global state untuk melacak riwayat aktivitas (Logs)
+        public static ObservableCollection<LogEntry> ActivityLogs { get; } = new ObservableCollection<LogEntry>();
 
         public Uri CurrentPage
         {
@@ -51,19 +55,29 @@ namespace KuFi.UI.ViewModels
     public class RelayCommand : ICommand
     {
         private readonly Action<object?> _execute;
+        private readonly Predicate<object?>? _canExecute;
 
-        public RelayCommand(Action<object?> execute)
+        public RelayCommand(Action<object?> execute, Predicate<object?>? canExecute = null)
         {
             _execute = execute ?? throw new ArgumentNullException(nameof(execute));
+            _canExecute = canExecute;
         }
 
-        public bool CanExecute(object? parameter) => true; 
-        public void Execute(object? parameter) => _execute(parameter);
-        
         public event EventHandler? CanExecuteChanged
         {
-            add { }
-            remove { }
+            add { CommandManager.RequerySuggested += value; }
+            remove { CommandManager.RequerySuggested -= value; }
         }
+
+        public bool CanExecute(object? parameter) => _canExecute == null || _canExecute(parameter);
+        public void Execute(object? parameter) => _execute(parameter);
+    }
+
+    public class LogEntry
+    {
+        public string Timestamp { get; set; } = string.Empty;
+        public string Event { get; set; } = string.Empty;
+        public string Path { get; set; } = string.Empty;
+        public string Action { get; set; } = string.Empty;
     }
 }

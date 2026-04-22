@@ -18,16 +18,62 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <StackPanel Grid.Row="0" Margin="0,0,0,30">
-            <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
-                <TextBlock Text="LOGS   >   " Foreground="{DynamicResource TextSecondary}" FontSize="12" FontWeight="SemiBold"/>
-                <TextBlock Text="SECURITY ACTIVITY" Foreground="{DynamicResource EthericMint}" FontSize="12" FontWeight="Bold"/>
+        <Grid Grid.Row="0" Margin="0,0,0,30">
+            <StackPanel HorizontalAlignment="Left">
+                <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                    <TextBlock Text="LOGS   >   " Foreground="{DynamicResource TextSecondary}" FontSize="12" FontWeight="SemiBold"/>
+                    <TextBlock Text="SECURITY ACTIVITY" Foreground="{DynamicResource EthericMint}" FontSize="12" FontWeight="Bold"/>
+                </StackPanel>
+                <TextBlock Text="Security Logs &amp; Activity" Foreground="{DynamicResource TextPrimary}" FontSize="32" FontWeight="SemiBold"/>
             </StackPanel>
-            <TextBlock Text="Security Logs &amp; Activity" Foreground="{DynamicResource TextPrimary}" FontSize="32" FontWeight="SemiBold"/>
-        </StackPanel>
+            
+            <Button x:Name="BtnClearLogs" Content="Clear Logs" HorizontalAlignment="Right" VerticalAlignment="Bottom" Padding="15,8" Background="Transparent" Foreground="{DynamicResource TextSecondary}" BorderBrush="{DynamicResource TextSecondary}" BorderThickness="1" Cursor="Hand" Click="BtnClearLogs_Click"/>
+        </Grid>
 
-        <Border Grid.Row="1" Background="{DynamicResource CardBackground}" CornerRadius="16" Padding="30">
-            <TextBlock Text="Log activity will be displayed here in the next update." Foreground="{DynamicResource TextSecondary}" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+        <Border Grid.Row="1" Background="{DynamicResource CardBackground}" CornerRadius="16" Padding="20">
+            <DataGrid x:Name="LogGrid" AutoGenerateColumns="False" IsReadOnly="True" HeadersVisibility="Column" 
+                      Background="Transparent" RowBackground="Transparent" AlternatingRowBackground="#05FFFFFF" 
+                      GridLinesVisibility="None" BorderThickness="0" Foreground="{DynamicResource TextPrimary}">
+                <DataGrid.Resources>
+                    <Style TargetType="DataGridColumnHeader">
+                        <Setter Property="Background" Value="Transparent"/>
+                        <Setter Property="Foreground" Value="{DynamicResource TextSecondary}"/>
+                        <Setter Property="FontWeight" Value="SemiBold"/>
+                        <Setter Property="Padding" Value="10,10,10,20"/>
+                        <Setter Property="BorderThickness" Value="0"/>
+                    </Style>
+                    <Style TargetType="DataGridCell">
+                        <Setter Property="BorderThickness" Value="0"/>
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="DataGridCell">
+                                    <Border Background="Transparent" Padding="10,15">
+                                        <ContentPresenter VerticalAlignment="Center"/>
+                                    </Border>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                        <Style.Triggers>
+                            <!-- Pemberian warna merah jika ada Ancaman Terdeteksi -->
+                            <DataTrigger Binding="{Binding Event}" Value="Ancaman Terdeteksi">
+                                <Setter Property="Foreground" Value="{DynamicResource ErrorRed}"/>
+                                <Setter Property="FontWeight" Value="SemiBold"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                    <Style TargetType="DataGridRow">
+                        <Setter Property="Background" Value="Transparent"/>
+                        <Setter Property="BorderThickness" Value="0,0,0,1"/>
+                        <Setter Property="BorderBrush" Value="#1AFFFFFF"/>
+                    </Style>
+                </DataGrid.Resources>
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Timestamp" Binding="{Binding Timestamp}" Width="150"/>
+                    <DataGridTextColumn Header="Event" Binding="{Binding Event}" Width="200"/>
+                    <DataGridTextColumn Header="Path" Binding="{Binding Path}" Width="*"/>
+                    <DataGridTextColumn Header="Action" Binding="{Binding Action}" Width="150"/>
+                </DataGrid.Columns>
+            </DataGrid>
         </Border>
     </Grid>
 </Page>

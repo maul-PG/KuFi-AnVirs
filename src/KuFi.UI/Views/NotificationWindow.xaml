@@ -27,8 +27,11 @@
             <Path Grid.RowSpan="2" Grid.Column="0" Data="M 0 0 L 4 0 L 4 10 L 12 0 L 17 0 L 7 12 L 17 24 L 12 24 L 4 14 L 4 24 L 0 24 Z" 
                   Fill="{DynamicResource EthericMint}" Stretch="Uniform" Width="24" Height="24" VerticalAlignment="Center" Margin="0,0,10,0"/>
 
-            <!-- Judul -->
-            <TextBlock Grid.Row="0" Grid.Column="1" Text="Ancaman Terdeteksi!" Foreground="{DynamicResource ErrorRed}" FontWeight="Bold" FontSize="14"/>
+            <!-- Judul dengan Logo -->
+            <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                <Image Source="/Assets/logo.png" Width="20" Height="20" Margin="0,0,8,0" RenderOptions.BitmapScalingMode="HighQuality"/>
+                <TextBlock Text="Ancaman Terdeteksi!" Foreground="{DynamicResource ErrorRed}" FontWeight="Bold" FontSize="14" VerticalAlignment="Center"/>
+            </StackPanel>
             
             <!-- Nama File -->
             <TextBlock Grid.Row="1" Grid.Column="1" x:Name="TxtFileName" Text="filename.exe" Foreground="{DynamicResource TextSecondary}" FontSize="11" TextTrimming="CharacterEllipsis" Margin="0,2,0,0"/>

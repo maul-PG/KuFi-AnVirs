@@ -41,6 +41,13 @@ namespace KuFi.UI.Views
 
         private void Timer_Tick(object? sender, EventArgs e)
         {
+            if (!KuFi.UI.ViewModels.SettingsManager.Current.RealTimeMonitor)
+            {
+                TxtCpu.Text = "OFF";
+                TxtRam.Text = "OFF";
+                return;
+            }
+
             try
             {
                 if (_cpuCounter != null && _ramCounter != null)
@@ -164,7 +171,12 @@ namespace KuFi.UI.Views
                     TxtQuickScanDetail.Visibility = Visibility.Hidden;
                 });
 
-                MessageBox.Show($"Quick Scan Complete!\nTotal Files Scanned: {stats[0]}\nThreats Found: {stats[1]}", "KuFi Quick Scan", MessageBoxButton.OK, stats[1] > 0 ? MessageBoxImage.Warning : MessageBoxImage.Information);
+                Dispatcher.Invoke(() =>
+                {
+                    KuFiDialogIcon iconType = stats[1] > 0 ? KuFiDialogIcon.Warning : KuFiDialogIcon.Info;
+                    var dialog = new KuFiDialog("KuFi Quick Scan", $"Quick Scan Complete!\nTotal Files Scanned: {stats[0]}\nThreats Found: {stats[1]}", KuFiDialogButtons.Ok, iconType);
+                    dialog.ShowDialog();
+                });
             }
             catch (Exception ex)
             {
@@ -175,7 +187,11 @@ namespace KuFi.UI.Views
                     QuickScanProgress.Visibility = Visibility.Hidden;
                     TxtQuickScanDetail.Visibility = Visibility.Hidden;
                 });
-                MessageBox.Show($"Terjadi kesalahan sistem: {ex.Message}", "Error Scanner", MessageBoxButton.OK, MessageBoxImage.Error);
+                Dispatcher.Invoke(() =>
+                {
+                    var dialog = new KuFiDialog("Error Scanner", $"Terjadi kesalahan sistem: {ex.Message}", KuFiDialogButtons.Ok, KuFiDialogIcon.Error);
+                    dialog.ShowDialog();
+                });
             }
             finally
             {
@@ -196,13 +212,14 @@ namespace KuFi.UI.Views
                 stats[1]++;
                 Dispatcher.Invoke(() =>
                 {
-                    var result = MessageBox.Show(
-                        $"THREAT DETECTED: {threat.threatName}\nLocation: {file}\n\nDo you want to permanently delete this file? (Yes = Delete, No = Ignore)", 
+                    var dialog = new KuFiDialog(
                         "KuFi Action Required", 
-                        MessageBoxButton.YesNo, 
-                        MessageBoxImage.Error);
+                        $"THREAT DETECTED: {threat.threatName}\nLocation: {file}\n\nDo you want to permanently delete this file? (Yes = Delete, No = Ignore)", 
+                        KuFiDialogButtons.YesNo, 
+                        KuFiDialogIcon.Error);
+                    dialog.ShowDialog();
                         
-                    if (result == MessageBoxResult.Yes)
+                    if (dialog.Result)
                     {
                         try { System.IO.File.Delete(file); } catch { KuFi.UI.ViewModels.MainViewModel.IsSystemSecured = false; }
                     }
@@ -239,6 +256,23 @@ namespace KuFi.UI.Views
                 {
                     vm.CurrentPage = new Uri("Views/SandboxPage.xaml", UriKind.Relative);
                 }
+            }
+        }
+
+        private void Page_Loaded(object sender, RoutedEventArgs e)
+        {
+            if (MainWindow.AutoStartScan)
+            {
+                MainWindow.AutoStartScan = false;
+                TriggerScan();
+            }
+        }
+
+        public void TriggerScan()
+        {
+            if (!_isScanning)
+            {
+                ScanNow_Click(this, new RoutedEventArgs());
             }
         }
 

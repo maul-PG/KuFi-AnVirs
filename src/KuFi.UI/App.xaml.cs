@@ -81,6 +81,14 @@ namespace KuFi.UI
                         {
                             KuFi.UI.ViewModels.MainViewModel.IsSystemSecured = false;
                             
+                            // Tambahkan ke Log Activity
+                            KuFi.UI.ViewModels.MainViewModel.ActivityLogs.Insert(0, new KuFi.UI.ViewModels.LogEntry {
+                                Timestamp = DateTime.Now.ToString("HH:mm:ss"),
+                                Event = "Ancaman Terdeteksi",
+                                Path = e.FullPath,
+                                Action = "Menunggu Tindakan"
+                            });
+
                             // Tampilkan Custom Notification Window
                             var notifWindow = new NotificationWindow(e.Name, e.FullPath);
                             notifWindow.Show();
