@@ -19,7 +19,7 @@ KuFi AnVirs is a Windows-based antivirus application developed using .NET 8 and 
 ## Development Setup
 1. Clone this repository:
    ```bash
-   git clone https://github.com/maul-PG/KuF i-AnVirs.git
+   git clone https://github.com/maul-PG/KuFi-AnVirs.git
    ```
 2. Ensure .NET 8 SDK is installed.
 3. Build the project:
