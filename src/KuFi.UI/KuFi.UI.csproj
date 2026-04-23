@@ -8,6 +8,7 @@
     <!-- Mendeklarasikan bahwa aplikasi butuh UAC elevation via app.manifest -->
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <ApplicationIcon>Assets\logo.ico</ApplicationIcon>
+    <AssemblyName>KuFi AnVirs</AssemblyName>
   </PropertyGroup>
   
   <ItemGroup>
