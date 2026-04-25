@@ -9,3 +9,5 @@ obj/
 *.exe
 publish/
 Installers/
+[Ii]nstallers/
+installers/
