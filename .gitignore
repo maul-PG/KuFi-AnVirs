@@ -7,3 +7,5 @@ obj/
 *.pdb
 *.dll
 *.exe
+publish/
+Installers/
