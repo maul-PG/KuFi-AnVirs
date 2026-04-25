@@ -118,6 +118,74 @@
                             </StackPanel>
                         </CheckBox>
                     </Border>
+                    
+                    <TextBlock Text="ADVANCED PROTECTION ENGINES" Foreground="{DynamicResource TextSecondary}" FontSize="12" FontWeight="Bold" Margin="0,0,0,15"/>
+
+                    <!-- Opsi 5: Heuristic Engine -->
+                    <Border Background="{DynamicResource CardBackground}" CornerRadius="16" Padding="25" Margin="0,0,0,15">
+                        <CheckBox x:Name="chkHeuristic" Style="{StaticResource ToggleSwitchStyle}">
+                            <StackPanel>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="&#xE9D9;" FontFamily="Segoe MDL2 Assets" Foreground="{DynamicResource EthericMint}" VerticalAlignment="Center" Margin="0,0,10,0" FontSize="18"/>
+                                    <TextBlock Text="Heuristic &amp; Behavioral Engine" Foreground="{DynamicResource TextPrimary}" FontSize="16" FontWeight="SemiBold"/>
+                                </StackPanel>
+                                <TextBlock Text="Analyze hidden files, folder mimicking, and zero-day threat patterns without signature." Foreground="{DynamicResource TextSecondary}" FontSize="13" Margin="28,5,0,0"/>
+                            </StackPanel>
+                        </CheckBox>
+                    </Border>
+                    
+                    <!-- Opsi 6: Auto Quarantine -->
+                    <Border Background="{DynamicResource CardBackground}" CornerRadius="16" Padding="25" Margin="0,0,0,15">
+                        <CheckBox x:Name="chkQuarantine" Style="{StaticResource ToggleSwitchStyle}">
+                            <StackPanel>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="&#xE753;" FontFamily="Segoe MDL2 Assets" Foreground="{DynamicResource EthericMint}" VerticalAlignment="Center" Margin="0,0,10,0" FontSize="18"/>
+                                    <TextBlock Text="Auto-Quarantine Threats (Encrypted)" Foreground="{DynamicResource TextPrimary}" FontSize="16" FontWeight="SemiBold"/>
+                                </StackPanel>
+                                <TextBlock Text="Move and XOR encrypt malicious files to C:\ProgramData\KuFiAnVirs\Quarantine instead of permanent deletion." TextWrapping="Wrap" MaxWidth="600" HorizontalAlignment="Left" Foreground="{DynamicResource TextSecondary}" FontSize="13" Margin="28,5,0,0"/>
+                            </StackPanel>
+                        </CheckBox>
+                    </Border>
+                    
+                    <!-- Opsi 7: Watchdog -->
+                    <Border Background="{DynamicResource CardBackground}" CornerRadius="16" Padding="25" Margin="0,0,0,30">
+                        <CheckBox x:Name="chkWatchdog" Style="{StaticResource ToggleSwitchStyle}">
+                            <StackPanel>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="&#xEA39;" FontFamily="Segoe MDL2 Assets" Foreground="{DynamicResource EthericMint}" VerticalAlignment="Center" Margin="0,0,10,0" FontSize="18"/>
+                                    <TextBlock Text="Anti-Tamper Watchdog Process" Foreground="{DynamicResource TextPrimary}" FontSize="16" FontWeight="SemiBold"/>
+                                </StackPanel>
+                                <TextBlock Text="Protect KuFi UI from being forcefully terminated by malicious scripts using a secondary monitor process." TextWrapping="Wrap" MaxWidth="600" HorizontalAlignment="Left" Foreground="{DynamicResource TextSecondary}" FontSize="13" Margin="28,5,0,0"/>
+                            </StackPanel>
+                        </CheckBox>
+                    </Border>
+                    
+                    <TextBlock Text="SYSTEM RECOVERY" Foreground="{DynamicResource TextSecondary}" FontSize="12" FontWeight="Bold" Margin="0,0,0,15"/>
+
+                    <Border Background="{DynamicResource CardBackground}" CornerRadius="16" Padding="25" Margin="0,0,0,30">
+                        <StackPanel>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="&#xE90F;" FontFamily="Segoe MDL2 Assets" Foreground="{DynamicResource EthericMint}" VerticalAlignment="Center" Margin="0,0,10,0" FontSize="18"/>
+                                <TextBlock Text="Repair Windows Policies" Foreground="{DynamicResource TextPrimary}" FontSize="16" FontWeight="SemiBold"/>
+                            </StackPanel>
+                            <TextBlock Text="Restore Task Manager, Registry Editor, and Command Prompt disabled by malware." Foreground="{DynamicResource TextSecondary}" FontSize="13" Margin="28,5,0,20"/>
+                            <Button Content="Repair System Now" Click="BtnRepair_Click" HorizontalAlignment="Left" Margin="28,0,0,0" Width="180" Height="35" Cursor="Hand">
+                                <Button.Template>
+                                    <ControlTemplate TargetType="Button">
+                                        <Border x:Name="btn" Background="Transparent" BorderBrush="{DynamicResource EthericMint}" BorderThickness="1" CornerRadius="4">
+                                            <ContentPresenter x:Name="cp" HorizontalAlignment="Center" VerticalAlignment="Center" TextBlock.Foreground="{DynamicResource EthericMint}"/>
+                                        </Border>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter TargetName="btn" Property="Background" Value="#1A99F6E4"/>
+                                                <Setter TargetName="cp" Property="TextBlock.Foreground" Value="{DynamicResource TextPrimary}"/>
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Button.Template>
+                            </Button>
+                        </StackPanel>
+                    </Border>
                 </StackPanel>
                 
                 <!-- Tombol Simpan ditaruh di luar StackPanel Left-Aligned agar bisa ke tengah layar -->

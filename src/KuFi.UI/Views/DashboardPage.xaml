@@ -24,6 +24,42 @@
                 <DoubleAnimation Storyboard.TargetName="PulseCircle2" Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)" From="1" To="1.8" Duration="0:0:2.5" BeginTime="0:0:1.2" />
                 <DoubleAnimation Storyboard.TargetName="PulseCircle2" Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)" From="1" To="1.8" Duration="0:0:2.5" BeginTime="0:0:1.2" />
             </Storyboard>
+
+            <!-- Style untuk Tombol "Launch" agar tidak ada kotak biru saat hover -->
+            <Style x:Key="LaunchButtonStyle" TargetType="Button">
+                <Setter Property="Background" Value="Transparent"/>
+                <Setter Property="BorderThickness" Value="0"/>
+                <Setter Property="Cursor" Value="Hand"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="Button">
+                            <Grid Background="Transparent">
+                                <ContentPresenter x:Name="content" Opacity="0.8"/>
+                                <Border x:Name="underline" Height="1" Background="{DynamicResource EthericMint}" VerticalAlignment="Bottom" Width="0" HorizontalAlignment="Left" Margin="0,0,0,-2"/>
+                            </Grid>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter TargetName="content" Property="Opacity" Value="1"/>
+                                    <Trigger.EnterActions>
+                                        <BeginStoryboard>
+                                            <Storyboard>
+                                                <DoubleAnimation Storyboard.TargetName="underline" Storyboard.TargetProperty="Width" To="80" Duration="0:0:0.3"/>
+                                            </Storyboard>
+                                        </BeginStoryboard>
+                                    </Trigger.EnterActions>
+                                    <Trigger.ExitActions>
+                                        <BeginStoryboard>
+                                            <Storyboard>
+                                                <DoubleAnimation Storyboard.TargetName="underline" Storyboard.TargetProperty="Width" To="0" Duration="0:0:0.3"/>
+                                            </Storyboard>
+                                        </BeginStoryboard>
+                                    </Trigger.ExitActions>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
         </ResourceDictionary>
     </Page.Resources>
 
@@ -138,7 +174,7 @@
                     <TextBlock Text="Flashdrive Rescue" Foreground="{DynamicResource TextPrimary}" FontSize="22" FontFamily="Segoe UI" FontWeight="Bold" Margin="0,25,0,10"/>
                     <TextBlock Text="Instantly sanitize and recover files from external drives potentially exposed in public terminals." Foreground="{DynamicResource TextSecondary}" FontSize="13" TextWrapping="Wrap" Margin="0,0,0,30" LineHeight="20"/>
                     
-                    <Button Click="LaunchRescue_Click" Background="Transparent" BorderThickness="0" Cursor="Hand" HorizontalAlignment="Left">
+                    <Button Click="LaunchRescue_Click" Style="{StaticResource LaunchButtonStyle}" HorizontalAlignment="Left">
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="Launch Tool" Foreground="{DynamicResource EthericMint}" FontWeight="SemiBold" FontSize="14"/>
                             <TextBlock Text="&#xE72A;" FontFamily="Segoe MDL2 Assets" Foreground="{DynamicResource EthericMint}" FontSize="12" VerticalAlignment="Center" Margin="8,0,0,0"/>
@@ -162,7 +198,7 @@
                     <TextBlock Text="App Sandbox" Foreground="{DynamicResource TextPrimary}" FontSize="22" FontFamily="Segoe UI" FontWeight="Bold" Margin="0,25,0,10"/>
                     <TextBlock Text="Open suspicious academic software or project files in a completely isolated environment." Foreground="{DynamicResource TextSecondary}" FontSize="13" TextWrapping="Wrap" Margin="0,0,0,30" LineHeight="20"/>
                     
-                    <Button Click="LaunchSandbox_Click" Background="Transparent" BorderThickness="0" Cursor="Hand" HorizontalAlignment="Left">
+                    <Button Click="LaunchSandbox_Click" Style="{StaticResource LaunchButtonStyle}" HorizontalAlignment="Left">
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="Launch Sandbox" Foreground="{DynamicResource EthericMint}" FontWeight="SemiBold" FontSize="14"/>
                             <TextBlock Text="&#xE72A;" FontFamily="Segoe MDL2 Assets" Foreground="{DynamicResource EthericMint}" FontSize="12" VerticalAlignment="Center" Margin="8,0,0,0"/>

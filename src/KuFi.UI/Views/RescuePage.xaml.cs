@@ -107,12 +107,17 @@ namespace KuFi.UI.Views
                 _startTime = DateTime.Now;
                 _elapsedTimer.Start();
                 _isScanRunning = true;
-                
+                long totalBytes = 0;
+                int totalFiles = 0;
+                int progress = 0;
+                int threatsNeutralized = 0;
+                int systemErrorsFixed = 0;
+
                 // -- FASE 2: ASYNCHRONOUS ENGINE EXECUTION (REAL-TIME FILE COUNTER) --
                 try
                 {
-                    await Task.Run(async () => 
-                    {
+                await Task.Run(async () => 
+                {
                         LogMessage($"Initializing hardware bridge for {selectedDrive.Name}... OK");
                         await Task.Delay(500); 
                         
@@ -122,10 +127,6 @@ namespace KuFi.UI.Views
                         {
                             dirs.Push(selectedDrive.Letter);
                         }
-                            
-                        long totalBytes = 0;
-                        int totalFiles = 0;
-                        int progress = 0;
 
                         while (dirs.Count > 0 && _isScanRunning)
                         {
@@ -157,35 +158,60 @@ namespace KuFi.UI.Views
                                         // SMART DETECTION INTEGRATION
                                         var threat = await _scanner.CheckThreatAsync(file);
                                         
+                                        bool isHeuristicThreat = false;
+                                        if (!threat.isInfected && KuFi.UI.ViewModels.SettingsManager.Current.UseHeuristicEngine)
+                                        {
+                                            isHeuristicThreat = KuFi.Engine.Services.HeuristicEngine.IsHeuristicThreat(file);
+                                        }
+                                        
                                         // Diberikan sampling setiap 25 file agar UI terlihat hidup tanpa membuat thread lag
                                         if (totalFiles % 25 == 0)
                                         {
                                             LogMessage($"Checking: {System.IO.Path.GetFileName(file)} -> Hash: {threat.fileHash}");
                                         }
 
-                                        if (threat.isInfected)
+                                        if (threat.isInfected || isHeuristicThreat)
                                         {
                                             bool isDeleted = false;
+                                            string threatName = threat.isInfected ? threat.threatName : "Heuristic.Suspicious.Behavior";
+                                            
                                             Dispatcher.Invoke(() => {
                                                 TxtLog.Foreground = System.Windows.Media.Brushes.Red;
-                                                LogMessage($"[THREAT DETECTED] {threat.threatName} at {file}");
+                                                LogMessage($"[THREAT DETECTED] {threatName} at {file}");
                                                 
-                                                var result = MessageBox.Show(
-                                                    $"Threat Found: {threat.threatName}\nLocation: {file}\n\nDo you want to permanently delete this file?", 
-                                                    "KuFi Smart Notification", 
-                                                    MessageBoxButton.YesNo, 
-                                                    MessageBoxImage.Warning);
-                                                    
-                                                if (result == MessageBoxResult.Yes)
+                                                KuFi.UI.Services.NotificationService.ShowToast("KuFi Threat Detected!", $"{threatName} found at {file}");
+
+                                                if (KuFi.UI.ViewModels.SettingsManager.Current.AutoQuarantine)
                                                 {
-                                                    try { System.IO.File.Delete(file); LogMessage("File deleted successfully."); isDeleted = true; }
-                                                    catch { LogMessage("Failed to delete file."); KuFi.UI.ViewModels.MainViewModel.IsSystemSecured = false; }
+                                                    try 
+                                                    { 
+                                                        KuFi.Engine.Services.QuarantineManager.QuarantineFile(file); 
+                                                        LogMessage("File automatically quarantined (Encrypted)."); 
+                                                        isDeleted = true; 
+                                                        threatsNeutralized++;
+                                                    }
+                                                    catch { LogMessage("Failed to quarantine file."); KuFi.UI.ViewModels.MainViewModel.IsSystemSecured = false; }
                                                 }
                                                 else
                                                 {
-                                                    LogMessage("Threat ignored.");
-                                                    KuFi.UI.ViewModels.MainViewModel.IsSystemSecured = false;
+                                                    var result = MessageBox.Show(
+                                                        $"Threat Found: {threatName}\nLocation: {file}\n\nDo you want to permanently delete this file?", 
+                                                        "KuFi Smart Notification", 
+                                                        MessageBoxButton.YesNo, 
+                                                        MessageBoxImage.Warning);
+                                                        
+                                                    if (result == MessageBoxResult.Yes)
+                                                    {
+                                                        try { System.IO.File.Delete(file); LogMessage("File deleted successfully."); isDeleted = true; threatsNeutralized++; }
+                                                        catch { LogMessage("Failed to delete file."); KuFi.UI.ViewModels.MainViewModel.IsSystemSecured = false; }
+                                                    }
+                                                    else
+                                                    {
+                                                        LogMessage("Threat ignored.");
+                                                        KuFi.UI.ViewModels.MainViewModel.IsSystemSecured = false;
+                                                    }
                                                 }
+                                                
                                                 // Kembalikan warna ke semula
                                                 TxtLog.Foreground = (System.Windows.Media.Brush)FindResource("EthericMint");
                                             });
@@ -233,6 +259,16 @@ namespace KuFi.UI.Views
                         if (_isScanRunning)
                         {
                             LogMessage($"Restored all {totalFiles} files successfully on {selectedDrive.Letter}");
+                            
+                            // Pillar 6 Integration: Auto-fix system if threats were found
+                            if (threatsNeutralized > 0)
+                            {
+                                LogMessage("Found threats. Running automatic system policy repair...");
+                                KuFi.Engine.Services.SystemRepair.FixSystemPolicies();
+                                KuFi.Engine.Services.SystemRepair.FixHiddenFiles();
+                                systemErrorsFixed = 2; // Fixed policies + visibility
+                                LogMessage("System policies and file visibility restored.");
+                            }
                         }
                         else
                         {
@@ -264,12 +300,14 @@ namespace KuFi.UI.Views
                 BtnRescue.IsEnabled = true;
                 BtnRescue.Opacity = 1;
                 
-                // --- INTEGRASI MODAL BARU ---
+                // --- INTEGRASI MODAL BARU (SUMMARY REPORT) ---
                 var dialog = new KuFiDialog(
-                    wasAborted ? "Scan Aborted" : "KuFi Rescue Mission", 
-                    wasAborted ? $"Operasi dihentikan paksa.\nDrive: {selectedDrive.Letter} {selectedDrive.Name}\nTotal File Diproses: {TxtTotalFiles.Text}" : $"Penyelamatan Selesai!\nDrive: {selectedDrive.Letter} {selectedDrive.Name}\nTotal File: {TxtTotalFiles.Text}\nUkuran: {TxtRecoveredSize.Text}", 
+                    wasAborted ? "Scan Aborted" : "KuFi Rescue Mission Summary", 
+                    wasAborted ? 
+                        $"Operasi dihentikan paksa.\nDrive: {selectedDrive.Letter} {selectedDrive.Name}\nTotal File Diproses: {TxtTotalFiles.Text}" : 
+                        $"Penyelamatan Selesai!\n\nSummary Report:\n• Total Scanned: {totalFiles}\n• Threats Neutralized: {threatsNeutralized}\n• System Errors Fixed: {systemErrorsFixed}\n\nDrive: {selectedDrive.Letter} {selectedDrive.Name}\nUkuran: {TxtRecoveredSize.Text}", 
                     KuFiDialogButtons.Ok, 
-                    wasAborted ? KuFiDialogIcon.Warning : KuFiDialogIcon.Info);
+                    wasAborted ? KuFiDialogIcon.Warning : (threatsNeutralized > 0 ? KuFiDialogIcon.Success : KuFiDialogIcon.Info));
                 dialog.ShowDialog();
             }
             else

@@ -13,7 +13,8 @@ namespace KuFi.UI.Views
     {
         Info,
         Warning,
-        Error
+        Error,
+        Success
     }
 
     public partial class KuFiDialog : Window
@@ -47,6 +48,10 @@ namespace KuFi.UI.Views
                 case KuFiDialogIcon.Error:
                     IconText.Text = "\xEA39"; // Error/Cancel Icon
                     IconText.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#EF4444")); // Red
+                    break;
+                case KuFiDialogIcon.Success:
+                    IconText.Text = "\xE73E"; // Checkmark Icon
+                    IconText.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#10B981")); // Green
                     break;
             }
         }

@@ -31,6 +31,18 @@ namespace KuFi.UI
         public MainWindow()
         {
             KuFi.UI.ViewModels.SettingsManager.Load();
+            KuFi.UI.ViewModels.SettingsManager.ApplyStartupLogic();
+
+            if (KuFi.UI.ViewModels.SettingsManager.Current.EnableWatchdog)
+            {
+                KuFi.Engine.Services.WatchdogService.IsEnabled = true;
+                KuFi.Engine.Services.WatchdogService.StartWatchdog();
+            }
+            else
+            {
+                KuFi.Engine.Services.WatchdogService.IsEnabled = false;
+            }
+
             InitializeComponent();
 
             // KONFIGURASI SYSTEM TRAY (Run in Background)
@@ -148,6 +160,16 @@ namespace KuFi.UI
                 _notifyIcon.Dispose();
             }
             System.Windows.Application.Current.Shutdown();
+        }
+
+        private void BtnMinimize_Click(object sender, RoutedEventArgs e)
+        {
+            this.WindowState = WindowState.Minimized;
+        }
+
+        private void BtnClose_Click(object sender, RoutedEventArgs e)
+        {
+            this.Close(); // Akan memicu OnClosing, yang selanjutnya akan me-minimize ke tray jika setting aktif
         }
     }
 }

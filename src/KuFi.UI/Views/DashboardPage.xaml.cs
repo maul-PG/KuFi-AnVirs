@@ -202,30 +202,51 @@ namespace KuFi.UI.Views
         private async Task ProcessSingleFileAsync(string file, KuFi.Engine.Scanners.HashScanner scanner, int[] stats)
         {
             var threat = await scanner.CheckThreatAsync(file);
+            
+            bool isHeuristicThreat = false;
+            if (!threat.isInfected && KuFi.UI.ViewModels.SettingsManager.Current.UseHeuristicEngine)
+            {
+                isHeuristicThreat = KuFi.Engine.Services.HeuristicEngine.IsHeuristicThreat(file);
+            }
 
             Dispatcher.Invoke(() => {
                 TxtQuickScanDetail.Text = $"Checking: {System.IO.Path.GetFileName(file)} -> Hash: {threat.fileHash}";
             });
 
-            if (threat.isInfected)
+            if (threat.isInfected || isHeuristicThreat)
             {
                 stats[1]++;
+                string threatName = threat.isInfected ? threat.threatName : "Heuristic.Suspicious.Behavior";
+
                 Dispatcher.Invoke(() =>
                 {
-                    var dialog = new KuFiDialog(
-                        "KuFi Action Required", 
-                        $"THREAT DETECTED: {threat.threatName}\nLocation: {file}\n\nDo you want to permanently delete this file? (Yes = Delete, No = Ignore)", 
-                        KuFiDialogButtons.YesNo, 
-                        KuFiDialogIcon.Error);
-                    dialog.ShowDialog();
-                        
-                    if (dialog.Result)
+                    KuFi.UI.Services.NotificationService.ShowToast("KuFi Threat Detected!", $"{threatName} found during Quick Scan.");
+
+                    if (KuFi.UI.ViewModels.SettingsManager.Current.AutoQuarantine)
                     {
-                        try { System.IO.File.Delete(file); } catch { KuFi.UI.ViewModels.MainViewModel.IsSystemSecured = false; }
+                        try 
+                        { 
+                            KuFi.Engine.Services.QuarantineManager.QuarantineFile(file);
+                        } 
+                        catch { KuFi.UI.ViewModels.MainViewModel.IsSystemSecured = false; }
                     }
                     else
                     {
-                        KuFi.UI.ViewModels.MainViewModel.IsSystemSecured = false;
+                        var dialog = new KuFiDialog(
+                            "KuFi Action Required", 
+                            $"THREAT DETECTED: {threatName}\nLocation: {file}\n\nDo you want to permanently delete this file? (Yes = Delete, No = Ignore)", 
+                            KuFiDialogButtons.YesNo, 
+                            KuFiDialogIcon.Error);
+                        dialog.ShowDialog();
+                            
+                        if (dialog.Result)
+                        {
+                            try { System.IO.File.Delete(file); } catch { KuFi.UI.ViewModels.MainViewModel.IsSystemSecured = false; }
+                        }
+                        else
+                        {
+                            KuFi.UI.ViewModels.MainViewModel.IsSystemSecured = false;
+                        }
                     }
                 });
             }

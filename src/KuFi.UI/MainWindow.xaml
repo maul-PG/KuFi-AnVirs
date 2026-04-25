@@ -4,10 +4,11 @@
         xmlns:vm="clr-namespace:KuFi.UI.ViewModels"
         Title="KuFi AnVirs" Height="768" Width="1366"
         Background="{DynamicResource BgDeepDarkBlue}"
+        WindowStyle="None"
         WindowStartupLocation="CenterScreen">
         
     <WindowChrome.WindowChrome>
-        <WindowChrome CaptionHeight="32" GlassFrameThickness="1" CornerRadius="0"/>
+        <WindowChrome CaptionHeight="32" GlassFrameThickness="0" CornerRadius="0"/>
     </WindowChrome.WindowChrome>
     <Window.DataContext>
         <vm:MainViewModel />
@@ -156,5 +157,37 @@
                NavigationUIVisibility="Hidden" 
                Background="Transparent"
                BorderThickness="0"/>
+               
+        <!-- Custom TitleBar Buttons -->
+        <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Top" WindowChrome.IsHitTestVisibleInChrome="True" Panel.ZIndex="1000">
+            <Button x:Name="BtnMinimize" Click="BtnMinimize_Click" Width="45" Height="32" Background="Transparent" BorderThickness="0" Cursor="Hand" ToolTip="Minimize">
+                <Button.Template>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="Bg" Background="Transparent">
+                            <TextBlock Text="&#xE921;" FontFamily="Segoe MDL2 Assets" FontSize="10" Foreground="{DynamicResource TextSecondary}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Bg" Property="Background" Value="#33FFFFFF"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Button.Template>
+            </Button>
+            <Button x:Name="BtnClose" Click="BtnClose_Click" Width="45" Height="32" Background="Transparent" BorderThickness="0" Cursor="Hand" ToolTip="Close (Minimize to Tray)">
+                <Button.Template>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="Bg" Background="Transparent">
+                            <TextBlock Text="&#xE8BB;" FontFamily="Segoe MDL2 Assets" FontSize="10" Foreground="{DynamicResource TextSecondary}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Bg" Property="Background" Value="#E81123"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Button.Template>
+            </Button>
+        </StackPanel>
     </Grid>
 </Window>
