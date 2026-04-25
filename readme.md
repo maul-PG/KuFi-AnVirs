@@ -2,25 +2,33 @@
 
 KuFi AnVirs is a Windows-based antivirus application developed using .NET 8 and WPF. The project focuses on real-time threat detection and malware remediation, specifically tailored for external storage devices (Flashdrives).
 
-> **Project Status:** Version 1.0-beta. Currently under active development. Folder scanning is currently limited to primary directories to ensure performance stability.
+> **Project Status:** **Version 1.0 (Stable Release)**. Now featuring integrated Watchdog services and an official installer.
 
 ## Key Features
 * **Real-time Guard:** Background file activity monitoring.
 * **Flashdrive Rescue:** Automatic scanning and cleanup of shortcuts or hidden files on USB Drives.
 * **SQLite Integration:** Persistent storage for scan logs and application settings.
 * **Minimalist Dashboard:** A clean and lightweight user interface built with WPF and modern design principles.
+* **Immortal Watchdog:** A dual-process protection system (`KuFi.Watchdog`). If the main application is forcefully terminated, the Watchdog will instantly resurrect it.
+* **System Repair:** One-click utility to fix Windows Registry corruptions and system anomalies caused by malware.
+* **SQLite Integration:** High-speed persistent storage for scan logs and security history.
+
+## Important Usage Notes (Reminders)
+
+* **Scanning the C:\ Drive:** We highly recommend **avoiding a direct scan of the entire C:\ drive** unless absolutely necessary. Due to deep heuristic analysis, scanning the system partition is possible but will take a significant amount of time.
+
+* **Exiting the Application:** To fully close the application from the System Tray, you **must disable the Watchdog feature** in the Settings first. If the Watchdog is active, the app will automatically restart itself to prevent unauthorized termination.
 
 ## Tech Stack
-* .NET 8 SDK
-* WPF (Windows Presentation Foundation)
-* SQLite (Entity Framework Core)
-* Serilog (System Logging)
+- **Framework:** .NET 8
+- **UI:** WPF (Windows Presentation Foundation)
+- **Database:** SQLite
+- **Logging:** Serilog
 
 ## Development Setup
 1. Clone this repository:
-   ```bash
-   git clone https://github.com/maul-PG/KuFi-AnVirs.git
-   ```
+   git clone [https://github.com/maul-PG/KuFi-AnVirs.git](https://github.com/maul-PG/KuFi-AnVirs.git)
+
 2. Ensure .NET 8 SDK is installed.
 3. Build the project:
    ```bash
@@ -31,16 +39,14 @@ KuFi AnVirs is a Windows-based antivirus application developed using .NET 8 and 
    dotnet run --project src/KuFi.UI
    ```
 
-## User Guide
-1. Download the executable from the [Releases] section.
-2. Run `KuFi AnVirs.exe`.
-3. Use the 'Scan Now' button on the dashboard to start scanning your Downloads and Documents folders.
-4. Check the 'Logs' tab to view detection history.
+## Official Release
+Don't want to build from source? Download the official installer from the [Releases](https://github.com/maul-PG/KuFi-AnVirs/releases) section.
 
-## Development Roadmap v2.0
-* Add 'Custom Scan' feature to select specific folders.
-* Add a Stop button for active scan processes.
-* Optimize scan engine for lower CPU usage.
+Run  [KuFi_AnVirs_v1.0_Setup.exe](KuFi_AnVirs_v1.0_Setup.exe)
+
+Follow the installation wizard.
+
+
 
 ## License
 Distributed under the [MIT License](license).
